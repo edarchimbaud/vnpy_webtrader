@@ -1,12 +1,12 @@
-# 1.0.5版本
+# Version 1.0.5
 
-1. 解决进程无法自动销毁的问题
-2. 使用secrets库做用户验证
-3. 删除重复的鉴权操作
-4. 请求错误时使用exception替代返回
-5. 使用compare_digest优化鉴权判断
-6. 添加停止按钮用于终止Web服务进程
+1. Solve the problem that processes cannot be destroyed automatically
+2. Use secrets library for user authentication
+3. Remove duplicate authentication operations
+4. Use exception instead of return in case of request error. 5.
+5. Use compare_digest to optimize the authentication judgment.
+6. Add a stop button to terminate the web service process.
 
-# 1.0.4版本
+# Version 1.0.4
 
-1. 将模块的图标文件信息，改为完整路径字符串
+1. Change the module's icon file information to a full path string.

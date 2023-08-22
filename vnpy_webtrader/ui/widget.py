@@ -10,7 +10,7 @@ from ..engine import APP_NAME, WebEngine
 
 
 class WebManager(QtWidgets.QWidget):
-    """网页服务器管理界面"""
+    """Web server management interface"""
 
     setting_filename: str = "web_trader_setting.json"
     setting_filepath: Path = get_file_path(setting_filename)
@@ -26,8 +26,8 @@ class WebManager(QtWidgets.QWidget):
         self.init_ui()
 
     def init_ui(self) -> None:
-        """初始化界面"""
-        self.setWindowTitle("Web服务")
+        """Initialization interface"""
+        self.setWindowTitle("Web Services")
 
         setting: dict = load_json(self.setting_filepath)
         username: str = setting.get("username", "vnpy")
@@ -44,22 +44,22 @@ class WebManager(QtWidgets.QWidget):
         self.host_line: QtWidgets.QLineEdit = QtWidgets.QLineEdit(host)
         self.port_line: QtWidgets.QLineEdit = QtWidgets.QLineEdit(port)
 
-        self.start_button: QtWidgets.QPushButton = QtWidgets.QPushButton("启动")
+        self.start_button: QtWidgets.QPushButton = QtWidgets.QPushButton("Start")
         self.start_button.clicked.connect(self.start)
 
-        self.end_button: QtWidgets.QPushButton = QtWidgets.QPushButton("停止")
+        self.end_button: QtWidgets.QPushButton = QtWidgets.QPushButton("Stop")
         self.end_button.clicked.connect(self.end)
 
         self.text_edit: QtWidgets.QTextEdit = QtWidgets.QTextEdit()
         self.text_edit.setReadOnly(True)
 
         form: QtWidgets.QFormLayout = QtWidgets.QFormLayout()
-        form.addRow("用户名", self.username_line)
-        form.addRow("密码", self.password_line)
-        form.addRow("请求地址", self.req_line)
-        form.addRow("订阅地址", self.sub_line)
-        form.addRow("监听地址", self.host_line)
-        form.addRow("监听端口", self.port_line)
+        form.addRow("Username", self.username_line)
+        form.addRow("Password", self.password_line)
+        form.addRow("Request address", self.req_line)
+        form.addRow("Subscription address", self.sub_line)
+        form.addRow("Listening address", self.host_line)
+        form.addRow("Listening port", self.port_line)
         form.addRow(self.start_button)
         form.addRow(self.end_button)
 
@@ -73,7 +73,7 @@ class WebManager(QtWidgets.QWidget):
         self.resize(1000, 500)
 
     def start(self) -> None:
-        """启动引擎"""
+        """Starting the engine"""
         username: str = self.username_line.text()
         password: str = self.password_line.text()
         req_address: str = self.req_line.text()
@@ -81,22 +81,22 @@ class WebManager(QtWidgets.QWidget):
         host: str = self.host_line.text()
         port: str = self.port_line.text()
 
-        # 保存配置
+        # Save configuration
         setting: dict = {
             "username": username,
             "password": password,
             "req_address": req_address,
             "sub_address": sub_address,
             "host": host,
-            "port": port
+            "port": port,
         }
         save_json(self.setting_filepath, setting)
 
-        # 启动RPC
+        # Start RPC
         self.web_engine.start_server(req_address, sub_address)
         self.start_button.setDisabled(True)
 
-        # 初始化Web服务子进程
+        # Initialize the Web service child process
         self.process: QtCore.QProcess = QtCore.QProcess(self)
         self.process.setProcessChannelMode(self.process.MergedChannels)
 
@@ -107,21 +107,20 @@ class WebManager(QtWidgets.QWidget):
 
         # 启动子进程
         cmd: list = [
-            "-m"
-            "uvicorn",
+            "-m" "uvicorn",
             "vnpy_webtrader.web:app",
             f"--host={host}",
-            f"--port={port}"
+            f"--port={port}",
         ]
         self.process.start(sys.executable, cmd)
 
     def end(self) -> None:
-        """终止引擎"""
+        """Aborting the engine"""
         self.process.kill()
 
     def web_started(self) -> None:
-        """Web进程启动"""
-        self.text_edit.append("Web服务器启动")
+        """Web process startup"""
+        self.text_edit.append("Web server started")
 
         for w in [
             self.username_line,
@@ -130,15 +129,15 @@ class WebManager(QtWidgets.QWidget):
             self.sub_line,
             self.host_line,
             self.port_line,
-            self.start_button
+            self.start_button,
         ]:
             w.setEnabled(False)
 
         self.end_button.setEnabled(True)
 
     def web_finished(self) -> None:
-        """Web进程结束"""
-        self.text_edit.append("Web服务器停止")
+        """Web process ended"""
+        self.text_edit.append("Web server stopped")
 
         for w in [
             self.username_line,
@@ -147,14 +146,14 @@ class WebManager(QtWidgets.QWidget):
             self.sub_line,
             self.host_line,
             self.port_line,
-            self.start_button
+            self.start_button,
         ]:
             w.setEnabled(True)
 
         self.end_button.setEnabled(False)
 
     def data_ready(self) -> None:
-        """更新进程有数据可读"""
+        """The update process has data to read"""
         text: bytes = bytes(self.process.readAll())
 
         try:

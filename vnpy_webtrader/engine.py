@@ -5,7 +5,7 @@ from vnpy.trader.event import (
     EVENT_ORDER,
     EVENT_TRADE,
     EVENT_POSITION,
-    EVENT_ACCOUNT
+    EVENT_ACCOUNT,
 )
 from vnpy.event import EventEngine, Event
 
@@ -14,7 +14,7 @@ APP_NAME = "RpcService"
 
 
 class WebEngine(BaseEngine):
-    """Web服务引擎"""
+    """Web Services Engine"""
 
     def __init__(self, main_engine: MainEngine, event_engine: EventEngine) -> None:
         """"""
@@ -26,7 +26,7 @@ class WebEngine(BaseEngine):
         self.register_event()
 
     def init_server(self) -> None:
-        """初始化RPC服务器"""
+        """Initializing the RPC Server"""
         self.server.register(self.main_engine.connect)
         self.server.register(self.main_engine.subscribe)
         self.server.register(self.main_engine.send_order)
@@ -46,14 +46,14 @@ class WebEngine(BaseEngine):
         rep_address: str,
         pub_address: str,
     ) -> None:
-        """启动RPC服务器"""
+        """Starting the RPC server"""
         if self.server.is_active():
             return
 
         self.server.start(rep_address, pub_address)
 
     def register_event(self) -> None:
-        """注册事件监听"""
+        """Registering event listeners"""
         self.event_engine.register(EVENT_TICK, self.process_event)
         self.event_engine.register(EVENT_TRADE, self.process_event)
         self.event_engine.register(EVENT_ORDER, self.process_event)
@@ -61,10 +61,10 @@ class WebEngine(BaseEngine):
         self.event_engine.register(EVENT_ACCOUNT, self.process_event)
 
     def process_event(self, event: Event) -> None:
-        """处理事件"""
+        """Handling of events"""
         self.server.publish(event.type, event.data)
 
     def close(self):
-        """关闭"""
+        """Close the RPC server"""
         self.server.stop()
         self.server.join()

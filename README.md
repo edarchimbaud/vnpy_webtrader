@@ -1,4 +1,4 @@
-# VeighNa框架的Web服务模块
+# Web Services Module for VeighNa Framework
 
 <p align="center">
   <img src ="https://vnpy.oss-cn-shanghai.aliyuncs.com/vnpy-logo.png"/>
@@ -11,43 +11,43 @@
     <img src ="https://img.shields.io/github/license/vnpy/vnpy.svg?color=orange"/>
 </p>
 
-## 说明
+## Description
 
-针对B-S架构需求设计的Web服务应用模块，实现了提供主动函数调用（REST）和被动数据推送（Websocket）的Web服务器。
+Designed for the B-S architecture requirements of the Web services application module, the implementation provides active function call (REST) and passive data push (Websocket) Web server.
 
-目前仅提供了基础的交易和管理接口，用户根据自己的需求扩展支持其他VeighNa应用模块的Web接口（如CTA策略自动交易等）。
+Currently only provides the basic trading and management interface, the user according to their own needs to expand the support for other VeighNa application module Web interface (such as CTA strategy auto-trading, etc.).
 
-## 安装
+## Installation
 
-安装环境推荐基于3.0.0版本以上的【[**VeighNa Studio**](https://www.vnpy.com)】。
+The installation environment is recommended to be based on version 3.0.0 or above of [[**VeighNa Studio**](https://edarchimbaud.com/veighna-website)].
 
-直接使用pip命令：
+Use pip command directly:
 
-```
+``
 pip install vnpy_webtrader
 ```
 
 
-或者下载源代码后，解压后在cmd中运行：
+Or download the source code, unzip it and run it in cmd:
 
-```
+```bash
 pip install .
 ```
 
 
-## 架构
+## Architecture
 
-* 基于Fastapi-Restful实现的主动函数调用功能，数据流程：
-	1. 用户点击浏览器中的某个按钮，发起Restful功能调用；
-	2. Web服务器收到Restful请求，将其转化为RPC功能调用发送给交易服务器；
-	3. 交易服务器收到RPC请求，执行具体的功能逻辑，并返回结果；
-	4. Web服务器返回Restful请求的结果给浏览器。
+* Active function call functionality based on Fastapi-Restful implementation, data flow:
+	1. User clicks on a button in the browser to initiate a Restful function call;
+	2. the web server receives the Restful request and converts it into an RPC function call to be sent to the transaction server;
+	3. The transaction server receives the RPC request, executes the specific functional logic, and returns the result;
+	4. the web server returns the result of the Restful request to the browser.
 
-* 基于Fastapi-Websocket实现的被动数据推送功能，数据流程：
-	1. 交易服务器的事件引擎转发某个事件推送，并推送给RPC客户端（Web服务器）；
-	2. Web服务器收到事件推送后，将其转化为json格式，并通过Websocket发出；
-	3. 浏览器通过Websocket收到推送的数据，并渲染在Web前端界面上。
+* Based on the Fastapi-Websocket implementation of the passive data push function, the data flow:
+	1. The event engine of the transaction server forwards an event push and pushes it to the RPC client (Web server). 2;
+	2. the Web server receives the event push, converts it to json format, and sends it out via Websocket;
+	3. the browser receives the pushed data via Websocket and renders it on the Web front-end interface.
 
-* 将程序分为两个进程的主要原因包括：
-	1. 交易服务器中的策略运行和数据计算的运算压力较大，需要保证尽可能保证低延时效率；
-	2. Web服务器需要面对互联网访问，将交易相关的逻辑剥离能更好保证安全性。
+* The main reasons for dividing the program into two processes include:
+	1. the transaction server in the strategy operation and data calculation of the computing pressure is large, need to ensure that as far as possible to ensure low latency efficiency;
+	2. Web server needs to face the Internet access, the transaction-related logic can be separated to better ensure security.
